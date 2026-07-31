@@ -1,18 +1,6 @@
 {
-  "name": "gentleglow-bot",
-  "version": "1.0.0",
-  "description": "GentleGlow - A Discord bot for private mental health check-ins and support routing.",
-  "main": "index.js",
   "type": "module",
-  "scripts": {
-    "start": "node index.js",
-    "register": "node register-commands.js"
-  },
   "dependencies": {
-    "better-sqlite3": "^13.0.1",
-    "discord.js": "^14.15.3",
-    "dotenv": "^16.4.5",
-    "jimp": "^1.6.1",
-    "node-cron": "^4.6.0"
+    "discord-interactions": "^3.4.0"
   }
 }
