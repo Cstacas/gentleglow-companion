@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GentleGlow Companion Screen</title>
+  <link rel="stylesheet" href="style.css?v=42">
+  <!-- Google Fonts for retro/premium style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <!-- Discord SDK (for Option D Activity integration) -->
+  <script src="https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@1.0.0/dist/index.global.js"></script>
+  <!-- Supabase client script -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="tamagotchi-container">
+    <!-- Outer Shell of the Tamagotchi Device -->
+    <div class="toy-shell">
+      <div class="shell-header">✨ GENTLEGLOW ✨</div>
+      
+      <!-- LCD Screen -->
+      <div class="lcd-screen">
+        <div class="screen-header">
+          <span id="companion-name">Loading...</span>
+          <span id="love-points">❤️ 000</span>
+        </div>
+        
+        <!-- Animated Sprite Container -->
+        <div class="viewport">
+          <!-- Action Overlay Elements -->
+          <img class="food-bowl-overlay" id="food-bowl" src="./images/food_bowl.png" alt="Bowl">
+          <div class="toy-ball-overlay" id="toy-ball">⚽</div>
+
+          <!-- Plant Container Layers -->
+          <div class="plant-layers" id="plant-container" style="display: none;">
+            <div class="plant-decor-layer" id="plant-decor"></div>
+            <div class="plant-sprite-layer" id="plant-sprite"></div>
+            <div class="plant-pot-layer" id="plant-pot"></div>
+          </div>
+
+          <div class="sprite-wrapper" id="sprite-wrapper" style="display: none;">
+            <div class="sleep-zzz-overlay" id="sleep-zzz">
+              <span>z</span><span>Z</span><span>z</span>
+            </div>
+            <img class="pet-hand-overlay" id="pet-hand" src="./images/pet_hand.png" alt="Hand">
+            <div class="pet-character-container" id="pet-character-container">
+              <div class="accessory-overlay" id="equipped-accessory"></div>
+              <!-- Interactive Sprite Sheet Frame -->
+              <div class="pet-sprite-sheet idle" id="companion-sprite"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Status Meters -->
+        <div class="status-grid">
+          <div class="status-row">
+            <span class="status-label">STATUS</span>
+            <div class="status-bar"><div class="fill" id="status-bar-love" style="width: 50%;"></div></div>
+          </div>
+          <div class="status-row">
+            <span class="status-label">MOOD</span>
+            <span id="mood-text">Peaceful 🧘</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Physical Buttons -->
+      <div class="buttons-row">
+        <button class="toy-button" id="btn-feed">FEED</button>
+        <button class="toy-button" id="btn-play">PLAY</button>
+        <button class="toy-button" id="btn-pet">PET</button>
+      </div>
+      
+      <div class="shell-footer">
+        <span>♥ Companion Screen ♥</span>
+        <button class="theme-select-btn" id="btn-theme" title="Change Shell Color">🎨 Color</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js?v=42"></script>
+</body>
+</html>
