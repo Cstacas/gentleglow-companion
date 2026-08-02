@@ -1,0 +1,36 @@
+# Dependency directories
+node_modules/
+
+# Local databases
+database/database.sqlite
+database/database.sqlite-shm
+database/database.sqlite-wal
+
+# Sensitive configurations
+.env
+
+# System / Log files
+*.log
+.DS_Store
+
+# Temporary coding / testing scripts
+check_*.js
+recolor_*.js
+test_*.js
+inspect_*.js
+search_*.js
+read_*.js
+print_*.js
+compare_*.js
+compile_*.js
+extract_*.js
+find_*.js
+animal_inventory.json
+analyze_*.js
+bake_*.js
+gentleglow-pi-processor.js
+get_*.js
+list_*.js
+parse_*.js
+scan_*.js
+settings.json
