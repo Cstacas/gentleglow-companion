@@ -1,0 +1,847 @@
+/* Reset and body styling */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Outer wrapper */
+.tamagotchi-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+/* The Tamagotchi Handheld Toy Shell */
+.toy-shell {
+  background: linear-gradient(145deg, #ff758c 0%, #ff7eb3 100%);
+  border: 16px solid #ff4e50;
+  border-radius: 170px 170px 200px 200px;
+  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.35), 
+              inset 0 8px 0 rgba(255, 255, 255, 0.4), 
+              inset 0 -14px 0 rgba(0, 0, 0, 0.15);
+  width: 580px;
+  height: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 45px 35px;
+  position: relative;
+  user-select: none;
+  transition: background 0.4s ease, border-color 0.4s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Custom Toy Casing Color Themes */
+.toy-shell.theme-pink {
+  background: linear-gradient(145deg, #ff758c 0%, #ff7eb3 100%);
+  border-color: #ff4e50;
+}
+.toy-shell.theme-lavender {
+  background: linear-gradient(145deg, #a18cd1 0%, #fbc2eb 100%);
+  border-color: #7d63b8;
+}
+.toy-shell.theme-teal {
+  background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+  border-color: #1e70e0;
+}
+.toy-shell.theme-sunflower {
+  background: linear-gradient(145deg, #ffdb58 0%, #ffa500 100%);
+  border-color: #cf8600;
+}
+.toy-shell.theme-midnight {
+  background: linear-gradient(145deg, #1f1c2c 0%, #928dab 100%);
+  border-color: #2c2542;
+}
+.toy-shell.theme-retro {
+  background: linear-gradient(145deg, #e0e0e0 0%, #b5b5b5 100%);
+  border-color: #7a7a7a;
+}
+
+.shell-header {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  letter-spacing: 4px;
+}
+
+/* LCD digital screen frame */
+.lcd-screen {
+  background-image: url('./images/cozy_bg.jpg');
+  background-size: cover;
+  background-position: center bottom;
+  border: 12px solid #3c543b;
+  border-radius: 24px;
+  box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.55);
+  width: 95%;
+  height: 62%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  font-family: 'Share Tech Mono', monospace;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Screen reflection glare effect */
+.lcd-screen::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 50%);
+  pointer-events: none;
+  transform: rotate(30deg);
+  z-index: 10;
+}
+
+.screen-header {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem; /* Compact text size */
+  background-color: rgba(0, 0, 0, 0.45);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Animated Sprite Container */
+.viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.sprite-wrapper {
+  position: absolute;
+  bottom: 54px; /* Lifted higher above the status bar */
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 220px;
+  height: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* Stand on the floor */
+  transition: left 1.5s ease-in-out;
+}
+
+.pet-character-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  transform-origin: bottom center;
+  transition: transform 0.2s ease;
+}
+
+.pet-sprite-sheet {
+  width: 150px;
+  height: 150px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  image-rendering: pixelated;
+}
+
+/* State changes simply change the source image in JS, no step math needed */
+.pet-sprite-sheet.sleep {
+  animation: none;
+  opacity: 0.85;
+}
+
+/* Accessory Overlay */
+.accessory-overlay {
+  position: absolute;
+  pointer-events: none;
+  z-index: 12;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
+}
+
+/* Custom Pixel Art Accessory Overlays */
+.accessory-overlay.party {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24' shape-rendering='crispEdges'><path d='M8,4 L1,20 L15,20 z' fill='%2329b6f6'/><circle cx='8' cy='3' r='2' fill='%23ffca28'/><path d='M5,12 h6 v2 h-6 z' fill='%23ff7043'/></svg>");
+  width: 20px;
+  height: 30px;
+  top: 54px; /* Lowered further onto the actual head top */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.accessory-overlay.bowtie {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12' shape-rendering='crispEdges'><path d='M1,1 L8,5 L8,7 L1,11 z M19,1 L12,5 L12,7 L19,11 z' fill='%23ff4081'/><rect x='8' y='4' width='4' height='4' fill='%23f50057'/></svg>");
+  width: 24px;
+  height: 14px;
+  top: 96px; /* Positioned higher on the collar line */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.accessory-overlay.detective {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 16' shape-rendering='crispEdges'><rect x='4' y='8' width='24' height='4' fill='%238d6e63'/><rect x='8' y='2' width='16' height='8' fill='%236d4c41'/><rect x='8' y='6' width='16' height='2' fill='%233e2723'/></svg>");
+  width: 32px;
+  height: 16px;
+  top: 64px; /* Lowered further onto the actual head top */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.accessory-overlay.glasses {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 10' shape-rendering='crispEdges'><rect x='2' y='2' width='10' height='6' fill='black'/><rect x='16' y='2' width='10' height='6' fill='black'/><rect x='12' y='3' width='4' height='2' fill='black'/><rect x='4' y='4' width='2' height='2' fill='%2300e5ff'/><rect x='18' y='4' width='2' height='2' fill='%2300e5ff'/></svg>");
+  width: 28px;
+  height: 10px;
+  top: 82px; /* Lowered further to align with the eyes */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.accessory-overlay.scarf {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 16' shape-rendering='crispEdges'><rect x='4' y='4' width='22' height='5' fill='%23f44336'/><rect x='20' y='9' width='4' height='7' fill='%23d32f2f'/><path d='M20,16 h4 v2 h-4 z' fill='%23ffeb3b'/></svg>");
+  width: 34px;
+  height: 20px;
+  top: 96px; /* Positioned higher on the collar line */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Plant Layer System */
+.plant-layers {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 220px;
+  height: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.plant-sprite-layer {
+  width: 140px;
+  height: 140px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  image-rendering: pixelated;
+  z-index: 2;
+  margin-bottom: -15px; /* Sink plant slightly into the pot rim */
+  transition: transform 0.3s ease;
+}
+
+.plant-pot-layer {
+  width: 90px;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  image-rendering: pixelated;
+  z-index: 3;
+}
+
+.plant-decor-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  pointer-events: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  image-rendering: pixelated;
+}
+
+/* SVG Plant Pots */
+.plant-pot-layer.terracotta {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 30' shape-rendering='crispEdges'><path d='M2,2 h36 v6 h-36 z' fill='%23d36844'/><path d='M5,8 h30 v18 h-30 z' fill='%23b75432'/><path d='M6,26 h28 v2 h-28 z' fill='%23933c1d'/></svg>");
+}
+.plant-pot-layer.cup {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 30' shape-rendering='crispEdges'><path d='M5,5 h30 v18 a10,10 0 0,1 -10,10 h-10 a10,10 0 0,1 -10,-10 z' fill='%2380deea'/><path d='M35,10 h6 a5,5 0 0,1 5,5 v2 a5,5 0 0,1 -5,5 h-6 z' fill='none' stroke='%2380deea' stroke-width='4'/></svg>");
+}
+.plant-pot-layer.crystal {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 30' shape-rendering='crispEdges'><path d='M10,25 L5,15 L10,5 L30,5 L35,15 L30,25 z' fill='%23b388ff'/><path d='M12,23 L7,15 L12,7 L28,7 L33,15 L28,23 z' fill='%237c4dff'/><path d='M15,20 L10,15 L15,10 L25,10 L30,15 L25,20 z' fill='%23d500f9'/></svg>");
+}
+.plant-pot-layer.wooden {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 30' shape-rendering='crispEdges'><path d='M4,4 h32 v22 h-32 z' fill='%238d6e63'/><path d='M6,4 v22 M34,4 v22 M20,4 v22' stroke='%234e342e' stroke-width='2'/><path d='M4,8 h32 M4,18 h32' stroke='%234e342e' stroke-width='2'/></svg>");
+}
+
+/* SVG Plant Decorations */
+.plant-decor-layer.ladybug {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' shape-rendering='crispEdges'><circle cx='80' cy='85' r='5' fill='red'/><circle cx='80' cy='85' r='2' fill='black'/><circle cx='76' cy='83' r='1' fill='black'/><circle cx='84' cy='87' r='1' fill='black'/></svg>");
+}
+.plant-decor-layer.fairy {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M25,55 Q35,25 50,45 T75,35' fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='1.5'/><circle cx='30' cy='42' r='4' fill='%23ffeb3b' filter='drop-shadow(0 0 4px %23ffeb3b)'/><circle cx='52' cy='45' r='4' fill='%23ffeb3b' filter='drop-shadow(0 0 4px %23ffeb3b)'/><circle cx='72' cy='40' r='4' fill='%23ffeb3b' filter='drop-shadow(0 0 4px %23ffeb3b)'/></svg>");
+}
+.plant-decor-layer.mushrooms {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' shape-rendering='crispEdges'><path d='M25,85 v-10 h4 v10 z' fill='white'/><path d='M21,75 q4,-6 8,0 z' fill='%2300e676'/><path d='M75,85 v-8 h3 v8 z' fill='white'/><path d='M72,77 q3,-5 6,0 z' fill='%2300e676'/></svg>");
+}
+.plant-decor-layer.pebbles {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' shape-rendering='crispEdges'><ellipse cx='32' cy='90' rx='8' ry='4' fill='%239e9e9e'/><ellipse cx='50' cy='91' rx='10' ry='5' fill='%23bdbdbd'/><ellipse cx='68' cy='90' rx='7' ry='4' fill='%23757575'/></svg>");
+}
+
+.status-grid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  font-size: 0.85rem; /* Ultra-compact text size */
+  background-color: rgba(0, 0, 0, 0.55);
+  padding: 4px 12px 6px 12px; /* Tight vertical padding */
+  border-radius: 0 0 10px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-label {
+  font-weight: bold;
+}
+
+.status-bar {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  height: 8px; /* Ultra-thin status bar */
+  width: 110px; /* Compact width */
+  overflow: hidden;
+}
+
+.status-bar .fill {
+  background-color: #ff9800; /* Warm orange status fill */
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Retro Physical Buttons */
+.buttons-row {
+  display: flex;
+  justify-content: space-around;
+  width: 85%;
+  margin-bottom: 5px;
+}
+
+.toy-button {
+  background: linear-gradient(135deg, #ffd35c 0%, #ffaa00 100%);
+  border: 6px solid #cc7700;
+  border-radius: 50%;
+  box-shadow: 0 10px 0 #995500, 0 12px 18px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+  width: 76px;
+  height: 76px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.1s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toy-button:active {
+  box-shadow: 0 2px 0 #995500, 0 4px 6px rgba(0, 0, 0, 0.2);
+  transform: translateY(6px);
+}
+
+.shell-footer {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Color Casing customizer button */
+.theme-select-btn {
+  background-color: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  color: #fff;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.theme-select-btn:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.theme-select-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* Responsive Scaling for smaller screens/phones */
+@media (max-width: 600px) {
+  .toy-shell {
+    width: 90vw;
+    height: 120vw;
+    max-width: 520px;
+    max-height: 680px;
+    padding: 20px 15px;
+  }
+  
+  .lcd-screen {
+    padding: 10px;
+  }
+  
+  .screen-header {
+    font-size: 1.1rem;
+  }
+  
+  #companion-sprite, .accessory-overlay {
+    max-width: 120px;
+    max-height: 120px;
+    font-size: 2.8rem;
+  }
+  
+  .status-grid {
+    font-size: 0.95rem;
+  }
+  
+  .status-bar {
+    width: 120px;
+    height: 14px;
+  }
+  
+  .toy-button {
+    width: 48px;
+    height: 48px;
+    font-size: 0.95rem;
+    box-shadow: 0 5px 0 #995500, 0 6px 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Action Cutscene Overlays */
+.food-bowl-overlay, .toy-ball-overlay, .pet-hand-overlay {
+  position: absolute;
+  pointer-events: none;
+  z-index: 15;
+  display: none; /* Controlled by JavaScript visibility class toggles */
+  image-rendering: pixelated;
+  user-select: none;
+}
+
+/* 1. Food Bowl */
+.food-bowl-overlay {
+  width: 55px;
+  height: 55px;
+  bottom: 52px;
+  left: 50%;
+  transform: translateX(-50%) translateX(45px); /* Positioned right in front of the pet */
+  mix-blend-mode: multiply; /* Auto-remove white background */
+}
+
+.food-bowl-overlay.active {
+  display: block;
+  animation: feedBowlIn 3s ease-in-out forwards, bowlEmptying 3s ease-in-out forwards;
+}
+
+/* 2. Thrown Toy Ball */
+.toy-ball-overlay {
+  font-size: 2.4rem;
+  top: -50px;
+  left: -50px;
+  transform: translate(-50%, -50%);
+}
+
+.toy-ball-overlay.active.throw-right {
+  display: block;
+  animation: throwRight 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.toy-ball-overlay.active.throw-left {
+  display: block;
+  animation: throwLeft 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* 3. Petting Hand */
+.pet-hand-overlay {
+  width: 65px;
+  height: 65px;
+  position: absolute;
+  top: -110px; /* Positioned fully above the pet's head locally */
+  left: 50%;
+  transform: translateX(-50%) scaleX(-1); /* Facing the pet */
+}
+
+.pet-hand-overlay.active {
+  display: block;
+  animation: petHand 3s ease-in-out forwards;
+}
+
+/* --- Keyframe Animations --- */
+
+/* Food Bowl entering from the side and sitting */
+@keyframes feedBowlIn {
+  0% {
+    transform: translateX(-50%) translateX(160px) rotate(45deg);
+    opacity: 0;
+  }
+  15% {
+    transform: translateX(-50%) translateX(45px) rotate(0deg);
+    opacity: 1;
+  }
+  85% {
+    transform: translateX(-50%) translateX(45px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateX(45px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Bowl kibble emptying clip path animation */
+@keyframes bowlEmptying {
+  0% {
+    clip-path: inset(0% 0 0 0); /* Full bowl */
+  }
+  30% {
+    clip-path: inset(25% 0 0 0); /* Eating kibble */
+  }
+  60% {
+    clip-path: inset(50% 0 0 0); /* Half empty */
+  }
+  85% {
+    clip-path: inset(75% 0 0 0); /* Almost empty */
+  }
+  100% {
+    clip-path: inset(75% 0 0 0);
+    opacity: 0;
+  }
+}
+
+/* Toy Ball being thrown in front of pet (towards the right) */
+@keyframes throwRight {
+  0% {
+    top: 20px;
+    left: 45%; /* Thrown from center-left */
+    transform: rotate(0deg);
+  }
+  25% {
+    top: 155px; /* Lands on the floor in front of pet */
+    left: 70%;
+    transform: rotate(180deg);
+  }
+  40% {
+    top: 100px; /* Bounce */
+    left: 78%;
+    transform: rotate(300deg);
+  }
+  55% {
+    top: 155px;
+    left: 83%;
+    transform: rotate(420deg);
+  }
+  70% {
+    top: 130px;
+    left: 87%;
+    transform: rotate(500deg);
+  }
+  85% {
+    top: 155px;
+    left: 90%;
+    opacity: 1;
+  }
+  100% {
+    top: 155px;
+    left: 90%;
+    opacity: 0; /* Caught */
+  }
+}
+
+/* Toy Ball being thrown in front of pet (towards the left) */
+@keyframes throwLeft {
+  0% {
+    top: 20px;
+    left: 55%; /* Thrown from center-right */
+    transform: rotate(0deg);
+  }
+  25% {
+    top: 155px; /* Lands in front on the left */
+    left: 30%;
+    transform: rotate(-180deg);
+  }
+  40% {
+    top: 100px; /* Bounce */
+    left: 22%;
+    transform: rotate(-300deg);
+  }
+  55% {
+    top: 155px;
+    left: 17%;
+    transform: rotate(-420deg);
+  }
+  70% {
+    top: 130px;
+    left: 13%;
+    transform: rotate(-500deg);
+  }
+  85% {
+    top: 155px;
+    left: 10%;
+    opacity: 1;
+  }
+  100% {
+    top: 155px;
+    left: 10%;
+    opacity: 0; /* Caught */
+  }
+}
+
+/* Petting Hand descending wiggling directly touching top of head */
+@keyframes petHand {
+  0% {
+    top: -110px;
+    transform: translateX(-50%) scaleX(-1) rotate(15deg);
+    opacity: 0;
+  }
+  15% {
+    top: 25px; /* Petting directly touching head top */
+    transform: translateX(-50%) scaleX(-1) rotate(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: translateX(-50%) scaleX(-1) translateX(-6px) rotate(-8deg);
+    top: 22px;
+  }
+  45% {
+    transform: translateX(-50%) scaleX(-1) translateX(6px) rotate(8deg);
+    top: 28px;
+  }
+  60% {
+    transform: translateX(-50%) scaleX(-1) translateX(-6px) rotate(-8deg);
+    top: 22px;
+  }
+  75% {
+    transform: translateX(-50%) scaleX(-1) translateX(6px) rotate(8deg);
+    top: 28px;
+  }
+  85% {
+    top: 25px;
+    transform: translateX(-50%) scaleX(-1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    top: -110px;
+    transform: translateX(-50%) scaleX(-1) rotate(-15deg);
+    opacity: 0;
+  }
+}
+
+/* Bow the whole body down to eat (bending head toward the bowl) */
+@keyframes feedWiggle {
+  0%, 100% {
+    transform: scaleX(var(--scale-direction, 1)) translateY(0) rotate(0deg);
+  }
+  20%, 40%, 60%, 80% {
+    transform: scaleX(var(--scale-direction, 1)) translateY(12px) rotate(calc(var(--scale-direction, 1) * 18deg)); /* Tilts head and upper body down! */
+  }
+  30%, 50%, 70% {
+    transform: scaleX(var(--scale-direction, 1)) translateY(8px) rotate(calc(var(--scale-direction, 1) * 14deg));
+  }
+}
+
+/* Pet jump animation for play action */
+@keyframes playJump {
+  0%, 100% {
+    transform: scaleX(var(--scale-direction, 1)) translateY(0) scale(1);
+  }
+  15%, 45%, 75% {
+    transform: scaleX(var(--scale-direction, 1)) translateY(-24px) scale(0.95, 1.05); /* Leap up! */
+  }
+  30%, 60%, 90% {
+    transform: scaleX(var(--scale-direction, 1)) translateY(0) scale(1.05, 0.95); /* Squish on landing */
+  }
+}
+
+/* Pet happy wobble for petting action */
+@keyframes petWobble {
+  0%, 100% {
+    transform: scaleX(var(--scale-direction, 1)) scale(1);
+  }
+  25%, 75% {
+    transform: scaleX(var(--scale-direction, 1)) scale(1.08, 0.92); /* Cute squash */
+  }
+  50% {
+    transform: scaleX(var(--scale-direction, 1)) scale(0.92, 1.08) rotate(calc(var(--scale-direction, 1) * 3deg)); /* Cute stretch */
+  }
+}
+
+/* Walking bobbing/waddling animation */
+.pet-character-container.walk {
+  animation: walkWaddle 0.35s infinite ease-in-out;
+}
+
+@keyframes walkWaddle {
+  0%, 100% {
+    transform: scaleX(var(--scale-direction, 1)) translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: scaleX(var(--scale-direction, 1)) translateY(-6px) rotate(calc(var(--scale-direction, 1) * 3deg));
+  }
+}
+
+/* Custom Corgi Petting Animation */
+.pet-hand-overlay.corgi-pet.active {
+  animation: petHandCorgi 3s ease-in-out forwards;
+}
+
+@keyframes petHandCorgi {
+  0% {
+    top: -110px;
+    transform: translateX(-50%) scaleX(-1) rotate(15deg);
+    opacity: 0;
+  }
+  15% {
+    top: 55px; /* Petting directly touching head top for shorter Corgi */
+    transform: translateX(-50%) scaleX(-1) rotate(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: translateX(-50%) scaleX(-1) translateX(-6px) rotate(-8deg);
+    top: 52px;
+  }
+  45% {
+    transform: translateX(-50%) scaleX(-1) translateX(6px) rotate(8deg);
+    top: 58px;
+  }
+  60% {
+    transform: translateX(-50%) scaleX(-1) translateX(-6px) rotate(-8deg);
+    top: 52px;
+  }
+  75% {
+    transform: translateX(-50%) scaleX(-1) translateX(6px) rotate(8deg);
+    top: 58px;
+  }
+  85% {
+    top: 55px;
+    transform: translateX(-50%) scaleX(-1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    top: -110px;
+    transform: translateX(-50%) scaleX(-1) rotate(-15deg);
+    opacity: 0;
+  }
+}
+
+/* Sleeping Zzz Overlay */
+.sleep-zzz-overlay {
+  position: absolute;
+  top: 15px;
+  right: 40px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: bold;
+  z-index: 14;
+  display: none;
+  pointer-events: none;
+}
+
+.sleep-zzz-overlay.active {
+  display: block;
+}
+
+.sleep-zzz-overlay span {
+  display: inline-block;
+  opacity: 0;
+  animation: floatZzz 3s infinite;
+}
+
+.sleep-zzz-overlay span:nth-child(1) {
+  animation-delay: 0s;
+}
+.sleep-zzz-overlay span:nth-child(2) {
+  animation-delay: 1s;
+}
+.sleep-zzz-overlay span:nth-child(3) {
+  animation-delay: 2s;
+}
+
+@keyframes floatZzz {
+  0% {
+    transform: translate(0, 0) scale(0.6);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(15px, -35px) scale(1.2);
+    opacity: 0;
+  }
+}
+
