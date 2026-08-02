@@ -1,0 +1,1 @@
+This folder stores your colored pixel-art spritesheets and cozy backgrounds.
