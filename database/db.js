@@ -127,7 +127,8 @@ db.exec(`
     experience INTEGER DEFAULT 0,
     last_watered INTEGER DEFAULT 0,
     pot_style TEXT DEFAULT 'terracotta',
-    decor TEXT DEFAULT 'none'
+    decor TEXT DEFAULT 'none',
+    water_days INTEGER DEFAULT 0
   );
 
   CREATE TABLE IF NOT EXISTS virtual_pets (
@@ -182,6 +183,12 @@ try {
     db.exec("ALTER TABLE virtual_plants ADD COLUMN pot_style TEXT DEFAULT 'terracotta';");
     db.exec("ALTER TABLE virtual_plants ADD COLUMN decor TEXT DEFAULT 'none';");
     console.log("🛠️ Migrated virtual_plants table: added customization columns.");
+  }
+
+  const hasWaterDays = pragmaPlants.some(col => col.name === 'water_days');
+  if (!hasWaterDays) {
+    db.exec("ALTER TABLE virtual_plants ADD COLUMN water_days INTEGER DEFAULT 0;");
+    console.log("🛠️ Migrated virtual_plants table: added water_days column.");
   }
 
   const pragmaPets = db.prepare("PRAGMA table_info(virtual_pets)").all();
@@ -372,26 +379,45 @@ export function dbGrowPlant(userId, exp) {
   if (!plant) return null;
   
   let newExp = plant.experience + exp;
-  let newStage = plant.stage;
   
-  // Growth rules: Stage 0 (Seed) -> 1 (Sprout) -> 2 (Seedling) -> 3 (Growth) -> 4 (Flowering) -> 5 (Fully Grown)
-  // Stage up every 100 EXP
-  const nextStageThreshold = (newStage + 1) * 100;
-  if (newExp >= nextStageThreshold && newStage < 5) {
-    newStage += 1;
-  }
-  
-  const stmt = db.prepare('UPDATE virtual_plants SET stage = ?, experience = ? WHERE user_id = ?');
-  stmt.run(newStage, newExp, userId);
+  // Growth is now determined solely by unique calendar watering days (not EXP),
+  // but we still update and save experience points as general progression!
+  const stmt = db.prepare('UPDATE virtual_plants SET experience = ? WHERE user_id = ?');
+  stmt.run(newExp, userId);
   syncPlant(userId);
-  return { stage: newStage, experience: newExp };
+  return { stage: plant.stage, experience: newExp };
 }
 
 export function dbWaterPlant(userId) {
-  const stmt = db.prepare('UPDATE virtual_plants SET last_watered = ? WHERE user_id = ?');
-  const res = stmt.run(Date.now(), userId);
+  const plant = dbGetUserPlant(userId);
+  if (!plant) return null;
+  
+  // Calculate unique calendar days watered in the server's local timezone
+  const lastWateredDate = plant.last_watered ? new Date(plant.last_watered).toDateString() : '';
+  const todayDate = new Date().toDateString();
+  
+  let incrementDay = 0;
+  if (lastWateredDate !== todayDate) {
+    incrementDay = 1;
+  }
+  
+  const newWaterDays = (plant.water_days || 0) + incrementDay;
+  
+  // Determine growth stage based on total unique watering days:
+  // 0-9 days -> Stage 0 (Sprout/Seedling)
+  // 10-19 days -> Stage 1 (Bud)
+  // 20+ days -> Stage 2 (Bloom)
+  let newStage = 0;
+  if (newWaterDays >= 20) {
+    newStage = 2; // Bloom
+  } else if (newWaterDays >= 10) {
+    newStage = 1; // Bud
+  }
+  
+  const stmt = db.prepare('UPDATE virtual_plants SET last_watered = ?, water_days = ?, stage = ? WHERE user_id = ?');
+  const res = stmt.run(Date.now(), newWaterDays, newStage, userId);
   syncPlant(userId);
-  return res;
+  return { res, water_days: newWaterDays, stage: newStage, incrementDay };
 }
 
 // --- BUDDY SYSTEM QUERIES ---
